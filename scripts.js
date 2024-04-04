@@ -39,13 +39,16 @@ document.addEventListener('DOMContentLoaded', function () {
     // Função para adicionar tarefa ao DOM
     function addTaskToDOM(task) {
         const li = document.createElement('li');
+        li.className = 'task-item'
         li.innerHTML = `
         <strong>${task.title}</strong> - 
         <span>${task.date}</span> - 
         <span>${task.time}</span><br>
         <span>${task.description}</span>
-        <button class="remove-btn">Remove</button>
+        <div class="button-container">
+        <button class="remove-btn">Remover</button>
         <button class="complete-btn">Concluir</button>
+        </div>
       `;
 
         // Verificando se a tarefa está concluída no localStorage e aplicando o estilo adequado

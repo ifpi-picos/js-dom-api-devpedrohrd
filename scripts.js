@@ -100,3 +100,51 @@ document.addEventListener('DOMContentLoaded', function () {
         form.reset();
     });
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadRepos();
+});
+
+document.getElementById("form-repositorios").addEventListener("submit", function(event) {
+    event.preventDefault(); // Evita que o formulário seja submetido
+
+    const usuario = document.getElementById("usuario").value;
+    const url = `https://api.github.com/users/${usuario}/repos`;
+
+    fetch(url)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Falha ao buscar repositórios');
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("lista-repositorios").innerHTML = "";
+            data.forEach(repo => {
+                addRepoToDOM(repo);
+            });
+
+            saveReposToLocalStorage(data);
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Usuário não encontrado ou ocorreu um erro ao buscar os repositórios.');
+        }); 
+});
+
+function saveReposToLocalStorage(repos) {
+    localStorage.setItem('repos', JSON.stringify(repos));
+}
+
+function loadRepos() {
+    const repos = JSON.parse(localStorage.getItem('repos')) || [];
+    repos.forEach(repo => {
+        addRepoToDOM(repo);
+    });
+}
+
+function addRepoToDOM(repo) {
+    const li = document.createElement('li');
+    li.innerHTML = `<a href="${repo.html_url}" target="_blank">${repo.name}</a>`;
+    document.getElementById("lista-repositorios").appendChild(li);
+}
